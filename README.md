@@ -29,11 +29,15 @@ So this application can output an icon file with the following sizes of resource
 
 Simply, you launch the application and open (or drag and drop) the PNG file.
 
+![Png2WinIco_Capture](img/Png2WinIco_Capture.png)
+
 Then click the "Save" button to save the .ICO file to the specified location.
 
 The recommended size of the PNG file is 256px or larger in both width and height. When resized, if the image is somewhat intricate, the quality of each small size of the .ICO file may be coarse.
 
 ## Download
+
+[https://github.com/hibara/Png2WinIco/releases/](https://github.com/hibara/Png2WinIco/releases/)
 
 ## History
 
