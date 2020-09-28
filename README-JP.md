@@ -29,11 +29,15 @@ Width must be multiple of 8 and <256. Height must be <256.
 
 アプリケーションを起動して、PNG ファイルを開く（または、ドラッグ＆ドロップ）するだけです。
 
+![Png2WinIco_Capture](img/Png2WinIco_Capture.png)
+
 あとは、「保存」ボタンを押して ICO ファイルを指定した先へ保存してください。
 
 なお、PNG ファイルは、幅・高さ共に 256px 以上を推奨します。リサイズしたときに、やや複雑な画像ですと、ICOファイルの各小さいサイズの質が粗くなる可能性があります。
 
 ## ダウンロード
+
+[https://github.com/hibara/Png2WinIco/releases](https://github.com/hibara/Png2WinIco/releases)
 
 ## バージョン履歴
 
