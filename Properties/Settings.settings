@@ -11,8 +11,5 @@
     <Setting Name="OpenDialogIniDir" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SaveDiralogIniDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
   </Settings>
 </SettingsFile>

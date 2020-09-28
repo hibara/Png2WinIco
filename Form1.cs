@@ -28,10 +28,27 @@ namespace png2winico
       {
         iconImages.Add(size, new Bitmap(size, size));
       }
+
+      // 記憶したフォーム位置に表示（設定がなければ画面中央に表示)
+      if (Png2WinIco.Properties.Settings.Default.FormPosX > -1)
+      {
+        this.Left = Png2WinIco.Properties.Settings.Default.FormPosX;
+      }
+      else
+      {
+        this.Left = Screen.GetBounds(this).Width / 2 - this.Width / 2;
+      }
+      if (Png2WinIco.Properties.Settings.Default.FormPosY > -1)
+      {
+        this.Top = Png2WinIco.Properties.Settings.Default.FormPosY;
+      }
+      else
+      {
+        this.Top = Screen.GetBounds(this).Height / 2 - this.Height / 2;
+      }
     }
     private void Form1_Shown(object sender, EventArgs e)
     {
-    //
     }
     private void Form1_FormClosed(object sender, FormClosedEventArgs e)
     {
@@ -40,15 +57,31 @@ namespace png2winico
       {
         iconImages[size].Dispose();
       }
+      // フォームの位置を設定に保存する
+      Png2WinIco.Properties.Settings.Default.FormPosX = this.Left;
+      Png2WinIco.Properties.Settings.Default.FormPosY = this.Top;
+      Png2WinIco.Properties.Settings.Default.Save();
     }
     private void MenuItemOpen_Click(object sender, EventArgs e)
     {
+      // オープンダイアログの初期ディレクトリを指定
+      if (Directory.Exists(Png2WinIco.Properties.Settings.Default.OpenDialogIniDir)){
+        openFileDialog1.InitialDirectory = Png2WinIco.Properties.Settings.Default.OpenDialogIniDir;
+      }
+      else
+      {
+        // デスクトップ
+        openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+      }
+
       if (openFileDialog1.ShowDialog() == DialogResult.OK)
       {
         if (CreateIconFile(openFileDialog1.FileName) == true)
         {
           buttonSave.Enabled = true;
           MenuItemSave.Enabled = true;
+          Png2WinIco.Properties.Settings.Default.OpenDialogIniDir = 
+            Path.GetDirectoryName(openFileDialog1.FileName);
         }
       }
     }
