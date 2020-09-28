@@ -29,7 +29,7 @@ So this application can output an icon file with the following sizes of resource
 
 Simply, you launch the application and open (or drag and drop) the PNG file.
 
-![Png2WinIco_Capture](img/Png2WinIco_Capture.png)
+<img src="img/Png2WinIco_Capture.png" width="512px" />
 
 Then click the "Save" button to save the .ICO file to the specified location.
 
