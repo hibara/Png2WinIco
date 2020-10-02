@@ -117,21 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MsgErrorWhileLoadingImage" xml:space="preserve">
-    <value>An error seems to have occurred while loading the image file. Stop the process.\n</value>
-  </data>
   <data name="MsgLessThan256px" xml:space="preserve">
-    <value>The loaded image is less than 256px. If you continue, it generates a low-resolution icon.
-Do you want to continue?</value>
+    <value>読み込まれたされた画像が256px以下です。
+このままだと低解像度のアイコンが生成されますが、続行しますか？</value>
   </data>
   <data name="MsgTitleError" xml:space="preserve">
-    <value>Error</value>
+    <value>エラー</value>
   </data>
   <data name="MsgTitleQuestion" xml:space="preserve">
-    <value>Question</value>
+    <value>問い合わせ</value>
+  </data>
+  <data name="MsgErrorWhileLoadingImage" xml:space="preserve">
+    <value>画像ファイルの読み込みでエラーが発生したようです。処理を中止します。\n</value>
   </data>
   <data name="MsgApplicationRestart" xml:space="preserve">
-    <value>To change the language display, the application must be restarted.
-Do you want to restart the application?</value>
+    <value>言語表示を変更するには、アプリケーションの再起動が必要です。
+再起動を行いますか？</value>
   </data>
 </root>

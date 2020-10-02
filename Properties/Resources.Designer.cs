@@ -59,5 +59,52 @@ namespace Png2WinIco.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   To change the language display, the application must be restarted.
+        ///Do you want to restart the application? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MsgApplicationRestart {
+            get {
+                return ResourceManager.GetString("MsgApplicationRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   An error seems to have occurred while loading the image file. Stop the process.\n に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MsgErrorWhileLoadingImage {
+            get {
+                return ResourceManager.GetString("MsgErrorWhileLoadingImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   The loaded image is less than 256px. If you continue, it generates a low-resolution icon.
+        ///Do you want to continue? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MsgLessThan256px {
+            get {
+                return ResourceManager.GetString("MsgLessThan256px", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Error に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MsgTitleError {
+            get {
+                return ResourceManager.GetString("MsgTitleError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Question に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MsgTitleQuestion {
+            get {
+                return ResourceManager.GetString("MsgTitleQuestion", resourceCulture);
+            }
+        }
     }
 }

@@ -4,6 +4,8 @@
 
 "png2winIco" is a Windows application that takes a large PNG file and generates an ICO file for Windows that contains resources of each size.
 
+It runs on **Windows XP/Vista/7/8/10**.
+
 It is a GUI application that can contain larger resources than the existing [png2ico](http://winterdrache.de/freeware/png2ico/) generated ICO files.
 
 "png2ico" does not seem to support the 256px icon size supported in Windows 7. When I try to load a PNG file larger than 256px, I get the following error message.
@@ -40,6 +42,10 @@ The recommended size of the PNG file is 256px or larger in both width and height
 [https://github.com/hibara/Png2WinIco/releases/](https://github.com/hibara/Png2WinIco/releases/)
 
 ## History
+
+* v1.1.0.0 ( 2020/10/03 )
+  * Set to save the form position, dialog options, and other settings
+  * Support to International ( i18n ) on English and Japanese versions
 
 * v1.0.0.0 ( 2020/09/28 )
   * Initial relese

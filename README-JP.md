@@ -4,6 +4,8 @@
 
 「Png2WinIco」 は、大きな PNG ファイルから、各サイズリソースを含む Windows 用 ICO ファイルを生成するアプリケーションです。
 
+**Windows XP/Vista/7/8/10** で動作します。
+
 すでに存在している [png2ico](http://winterdrache.de/freeware/png2ico/) の生成する ICO ファイルよりも、より大きいサイズのリソースを含めることができ、GUI アプリケーションにしたものです。
 
 「png2ico」は、Windows 7 から導入された、256pxサイズのアイコンには対応していないようです。256px以上のサイズのPNGを読み込ませようとすると、以下のようなエラーメッセージが表示されてしまいます。
@@ -40,6 +42,10 @@ Width must be multiple of 8 and <256. Height must be <256.
 [https://github.com/hibara/Png2WinIco/releases](https://github.com/hibara/Png2WinIco/releases)
 
 ## バージョン履歴
+
+* v1.1.0.0 ( 2020/10/03 )
+  * フォーム位置やダイアログオプションなどの設定を保存するにした
+  * 英語版と日本語版の国際対応（i18n）を行った
 
 * v1.0.0.0 ( 2020/09/28 )
   * 初リリース

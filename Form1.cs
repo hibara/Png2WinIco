@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Png2WinIco.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -11,10 +13,13 @@ namespace png2winico
   public partial class Form1 : Form
   {
     // 縮小する画像サイズ
+    // The size of images size to be reduced
     int[] sizes = new int[] { 256, 64, 48, 32, 24, 16 };
     // アイコンの各イメージサイズを格納する
+    // Store each image size of an icon as a key-value array
     Dictionary<int, Bitmap> iconImages = new Dictionary<int, Bitmap>();
     // 読み込んだPNGファイルパス
+    // The original PNG file path to be loaded
     string InputFilePath = "";
 
     public Form1()
@@ -24,23 +29,38 @@ namespace png2winico
     private void Form1_Load(object sender, EventArgs e)
     {
       // アイコンに含める「サイズ」分の Bitmap を Dictionary に登録
-      foreach(int size in sizes)
+      // Add a Bitmap for the "size" of the icon to the Dictionary array
+      foreach (int size in sizes)
       {
         iconImages.Add(size, new Bitmap(size, size));
       }
 
-      // 記憶したフォーム位置に表示（設定がなければ画面中央に表示)
-      if (Png2WinIco.Properties.Settings.Default.FormPosX > -1)
+      labelPngFilePath.Text = "";
+
+      // 表示言語
+      // Language
+      if (CultureInfo.CurrentCulture.Name == "ja-JP")
       {
-        this.Left = Png2WinIco.Properties.Settings.Default.FormPosX;
+        toolStripStatusLabel1.Text = "日本語 ( 日本 )";
+      }
+      else
+      {
+        toolStripStatusLabel1.Text = "English ( Default )";
+      }
+
+      // 記憶したフォーム位置に表示（設定がなければ画面中央に表示)
+      // Displayed at the memorized form position (or in the center of the screen if not set)
+      if (Settings.Default.FormPosX > -1)
+      {
+        this.Left = Settings.Default.FormPosX;
       }
       else
       {
         this.Left = Screen.GetBounds(this).Width / 2 - this.Width / 2;
       }
-      if (Png2WinIco.Properties.Settings.Default.FormPosY > -1)
+      if (Settings.Default.FormPosY > -1)
       {
-        this.Top = Png2WinIco.Properties.Settings.Default.FormPosY;
+        this.Top = Settings.Default.FormPosY;
       }
       else
       {
@@ -53,35 +73,42 @@ namespace png2winico
     private void Form1_FormClosed(object sender, FormClosedEventArgs e)
     {
       // アイコンイメージを格納する Bitmap を Dispose
+      // Dispose the Bitmap for storing the icon images
       foreach (int size in sizes)
       {
         iconImages[size].Dispose();
       }
+      // 言語 ( Language )
+      //Settings.Default.Language = CultureInfo.CurrentCulture.Name;
+
       // フォームの位置を設定に保存する
-      Png2WinIco.Properties.Settings.Default.FormPosX = this.Left;
-      Png2WinIco.Properties.Settings.Default.FormPosY = this.Top;
-      Png2WinIco.Properties.Settings.Default.Save();
+      // Save the position of the form in the configuration
+      Settings.Default.FormPosX = this.Left;
+      Settings.Default.FormPosY = this.Top;
+      Settings.Default.Save();
     }
     private void MenuItemOpen_Click(object sender, EventArgs e)
     {
       // オープンダイアログの初期ディレクトリを指定
-      if (Directory.Exists(Png2WinIco.Properties.Settings.Default.OpenDialogIniDir)){
-        openFileDialog1.InitialDirectory = Png2WinIco.Properties.Settings.Default.OpenDialogIniDir;
+      // Specify the initial directory for the open-dialog
+      if (Directory.Exists(Settings.Default.OpenDialogIniDir)){
+        openFileDialog1.InitialDirectory = Settings.Default.OpenDialogIniDir;
       }
       else
       {
-        // デスクトップ
-        openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        // デフォルトはデスクトップ
+        // The default is desktop path
+        openFileDialog1.InitialDirectory = 
+          Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
       }
 
       if (openFileDialog1.ShowDialog() == DialogResult.OK)
       {
-        if (CreateIconFile(openFileDialog1.FileName) == true)
+        if (OpenPngfileToImages(openFileDialog1.FileName) == true)
         {
           buttonSave.Enabled = true;
           MenuItemSave.Enabled = true;
-          Png2WinIco.Properties.Settings.Default.OpenDialogIniDir = 
-            Path.GetDirectoryName(openFileDialog1.FileName);
+          Settings.Default.OpenDialogIniDir = Path.GetDirectoryName(openFileDialog1.FileName);
         }
       }
     }
@@ -101,12 +128,42 @@ namespace png2winico
       frm2.ShowDialog();
       frm2.Dispose();
     }
+    // コンテキストメニュー
+    // Context menu
+    private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+      if (CultureInfo.CurrentCulture.Name == "ja-JP")
+      {
+        toolStripMenuItemEn.Checked = false;
+        toolStripMenuItemJP.Checked = true;
+        toolStripStatusLabel1.Text = "日本語 ( 日本 )";
+      }
+      else
+      {
+        toolStripMenuItemEn.Checked = true;
+        toolStripMenuItemJP.Checked = false;
+        toolStripStatusLabel1.Text = "English ( Default )";
+      }
+    }
+    private void toolStripMenuItemEn_Click(object sender, EventArgs e)
+    {
+      if (ChangeApplicationLanguage("EN") == true)
+      {
+      }
+    }
+    private void toolStripMenuItemJP_Click(object sender, EventArgs e)
+    {
+      if (ChangeApplicationLanguage("ja-JP") == true)
+      { 
+      }
+    }
     private void buttonSave_Click(object sender, EventArgs e)
     {
       saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(InputFilePath);
       if (saveFileDialog1.ShowDialog() == DialogResult.OK)
       {
         // アイコンファイル（*.ico）として保存
+        // Save as an icon file (*.ico)
         if (CreateIconFile(saveFileDialog1.FileName) == false)
         {
           return;
@@ -131,22 +188,47 @@ namespace png2winico
     private void Form1_DragDrop(object sender, DragEventArgs e)
     {
       // ドロップされたすべてのファイル名を取得する
+      // Retrieve all dropped file names
       string[] fileName = (string[])e.Data.GetData(DataFormats.FileDrop, false);
 
-      // ステータスバーにドラッグ＆ドロップされたファイル名を表示
-      toolStripStatusLabel1.Text = fileName[0];
-
-      // 投げ込まれたpngファイルをそれぞれのサイズにリサイズして表示する
+      // ドラッグ＆ドロップされたPNGファイルをそれぞれのサイズにリサイズして表示する
+      // Resize the drag-and-drop PNG files to their respective sizes
       if ( OpenPngfileToImages(fileName[0]) == true)
       {
         buttonSave.Enabled = true;
         MenuItemSave.Enabled = true;
       }
     }
+    private void statusStrip1_Click(object sender, EventArgs e)
+    {
+      Point p = Cursor.Position;
+      // コンテキストメニューを表示する
+      // Show the context menu
+      this.contextMenuStrip.Show(p);
+    }
+    private bool ChangeApplicationLanguage(string lang)
+    {
+      if (MessageBox.Show(
+        // To change the language display, the application must be restarted.
+        // Do you want to restart the application?
+        // 言語表示を変更するには、アプリケーションの再起動が必要です。
+        // 再起動を行いますか？
+        Resources.MsgApplicationRestart,
+        Resources.MsgTitleQuestion, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+        MessageBoxDefaultButton.Button1) == DialogResult.Yes )
+      {
+        Settings.Default.Language = lang;
+        Application.Restart();
+        return (true);
+      }
+      else
+      {
+        return (false);
+      }
+    }
     private bool OpenPngfileToImages(string FilePath)
     {
       InputFilePath = FilePath;
-      Graphics g;
       try
       {
         using (Bitmap baseImage = new Bitmap(FilePath))
@@ -154,8 +236,12 @@ namespace png2winico
           if (baseImage.Width < 256 || baseImage.Height < 256)
           {
             if (MessageBox.Show(
-                  "読み込まれたされた画像が256px以下です。\nこのままだと低解像度のアイコンが生成されますが、続行しますか？",
-                  "問い合わせ", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                  // The loaded image is less than 256px. If you continue, it generates a low-resolution icon.
+                  // Do you want to continue?
+                  // 読み込まれたされた画像が256px以下です。
+                  // このままだと低解像度のアイコンが生成されますが、続行しますか？
+                  Resources.MsgLessThan256px,
+                  Resources.MsgTitleQuestion, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                   MessageBoxDefaultButton.Button2) == DialogResult.No)
             {
               return (false);
@@ -170,13 +256,18 @@ namespace png2winico
               ((PictureBox)cList[0]).Image = iconImages[size];
             }
           }
+          // ボタン上にあるラベルにドラッグ＆ドロップされたPNGファイルパスを表示する
+          // Show the drag-and-drop PNG file path on the Label above the Button
+          labelPngFilePath.Text = FilePath;
         }
       }
       catch
       {
         MessageBox.Show(
-                  "画像ファイルの読み込みでエラーが発生したようです。処理を中止します。\n" + FilePath,
-                  "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error
+                  // An error seems to have occurred while loading the image file. Stop the process.\n
+                  // 画像ファイルの読み込みでエラーが発生したようです。処理を中止します。\n
+                  Resources.MsgErrorWhileLoadingImage + FilePath,
+                  Resources.MsgTitleError, MessageBoxButtons.OK, MessageBoxIcon.Error
                   );
         return (false);
       }
@@ -191,9 +282,10 @@ namespace png2winico
     // ref. https://gist.github.com/darkfall/1656050/
     /// <summary>
     /// PNGファイルが読み込まれリサイズされたデータをまとめてアイコンファイルを生成する
+    /// Generate icon file from the resized data of PNG file loaded
     /// </summary>
-    /// <param name="OutFilePath">出力するアイコンファイルパス</param>
-    /// <returns>アイコンファイルが正常に生成されたか否か（bool）</returns>
+    /// <param name="OutFilePath">出力するアイコンファイルパス [ Output icon file path ] </param>
+    /// <returns>アイコンファイルが正常に生成されたか否か（bool）[ Whether the icon file has been generated successfully(bool) ]</returns>
     private bool CreateIconFile(string OutFilePath)
     {
       using (FileStream outfs = new FileStream(OutFilePath, FileMode.OpenOrCreate))
@@ -265,14 +357,15 @@ namespace png2winico
       return (true);
     }
     /// <summary>
-    /// 指定されたサイズ幅、サイズ高さでリサイズする
+    /// 指定されたサイズ幅、サイズ高さでPNGファイル画像をリサイズする
+    /// Resize the PNG file image to the specified size width and height
     /// ref: https://stackoverflow.com/questions/1922040/resize-an-image-c-sharp
     /// ref: https://gist.github.com/darkfall/1656050/
     /// </summary>
-    /// <param name="image">リサイズされたイメージ</param>
-    /// <param name="width">リサイズする画像幅</param>
-    /// <param name="height">リサイズする画像高さ</param>
-    /// <returns>リサイズされた画像</returns>
+    /// <param name="image">リサイズされたイメージ[ Resized Image ]</param>
+    /// <param name="width">リサイズする画像幅[ Image width to resize ]</param>
+    /// <param name="height">リサイズする画像高さ[ Image height to resize ]</param>
+    /// <returns>リサイズされたBitmap画像[ Resized Bitmap image ]</returns>
     public static Bitmap ResizeImage(Image image, int width, int height)
     {
       var destRect = new Rectangle(0, 0, width, height);
